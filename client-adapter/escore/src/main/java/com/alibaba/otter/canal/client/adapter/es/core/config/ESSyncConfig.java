@@ -1,11 +1,10 @@
 package com.alibaba.otter.canal.client.adapter.es.core.config;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.otter.canal.client.adapter.support.AdapterConfig;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 /**
  * ES 映射配置
@@ -113,6 +112,8 @@ public class ESSyncConfig implements AdapterConfig {
         private Long                         syncInterval;                           // 同步时间间隔
 
         private SchemaItem                   schemaItem;                             // sql解析结果模型
+
+        private Map<String, NestedMaping> nestedFields = new HashMap<>();                           //nested 类型
 
         public String get_index() {
             return _index;
@@ -225,6 +226,29 @@ public class ESSyncConfig implements AdapterConfig {
         public void setSchemaItem(SchemaItem schemaItem) {
             this.schemaItem = schemaItem;
         }
+
+        public Map<String, NestedMaping> getNestedFields() {
+            return nestedFields;
+        }
+
+        public void setNestedFields(Map<String, NestedMaping> nestedFields) {
+            this.nestedFields = nestedFields;
+        }
+
+        private Set<String> nestedPks= new HashSet<>();
+
+        public Set<String>  getNestedPks() {
+            if(CollectionUtils.isEmpty(nestedFields) || CollectionUtils.isEmpty(nestedFields.values())){
+                return null;
+            }
+            if(!CollectionUtils.isEmpty(nestedPks)){
+                return nestedPks;
+            }
+            nestedFields.values().forEach(nestedMaping -> {
+                nestedPks.add(nestedMaping.getPk());
+            });
+            return nestedPks;
+        }
     }
 
     public static class RelationMapping {
@@ -248,4 +272,48 @@ public class ESSyncConfig implements AdapterConfig {
             this.parent = parent;
         }
     }
+
+
+    public static class NestedMaping {
+        private String pk;
+        private String fields;
+        private Set<String> nestedfields = new HashSet<>();
+        private boolean valid = false;
+
+        public String getFields() {
+            return fields;
+        }
+
+        public Set<String> getNestedfields() {
+            return nestedfields;
+        }
+
+        public void setFields(String fields) {
+            String[] split = fields.split(",");
+            nestedfields.addAll(Arrays.asList(split));
+            setValid(!CollectionUtils.isEmpty(nestedfields));
+            this.fields = fields;
+        }
+
+        public void setNestedfields(Set<String> nestedfields) {
+            this.nestedfields = nestedfields;
+        }
+
+        public void setPk(String pk) {
+            this.pk = pk;
+        }
+
+        public String getPk() {
+            return pk;
+        }
+
+        public boolean isValid() {
+            return valid;
+        }
+
+        public void setValid(boolean valid) {
+            this.valid = valid;
+        }
+    }
+
 }

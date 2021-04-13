@@ -1,6 +1,9 @@
 dataSourceKey: defaultDS
-destination: example
-groupId: g1
+destination: MERCHANTORDER_SYNC_ES
+outerAdapterKey: exampleKey
+groupId: MERCHANTORDER
+#destination: example
+#groupId: g1
 esMapping:
   _index: order-test-3
   _type: order_index

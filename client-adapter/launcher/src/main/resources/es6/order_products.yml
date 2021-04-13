@@ -1,0 +1,22 @@
+dataSourceKey: defaultDS
+#destination: example
+#groupId: g1
+destination: MERCHANTORDER_SYNC_ES
+outerAdapterKey: exampleKey
+groupId: MERCHANTORDER
+esMapping:
+  _index: order-test-3
+  _type: order_index
+  _id: _id
+  upsert: true
+  nestedFields:
+    products:
+      pk: productId
+      fields: productId,productName
+#  pk: id
+  sql: "select order_id as _id,item_id as itemId,product_id as productId ,product_name as productName
+        from order_items"
+#  objFields:
+#    _labels: array:;
+  etlCondition: ""
+  commitBatch: 3000

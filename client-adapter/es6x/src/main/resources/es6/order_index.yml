@@ -5,6 +5,8 @@ esMapping:
   _index: order-test-3
   _type: order_index
   _id: _id
+  nestedFields:
+    products: productId,productName
   upsert: true
 #  pk: id
   sql: "select 
