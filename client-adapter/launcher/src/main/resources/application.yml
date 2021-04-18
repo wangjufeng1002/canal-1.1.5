@@ -7,14 +7,14 @@ spring:
     default-property-inclusion: non_null
 
 canal.conf:
-  mode: rocketMQ # kafka rocketMQ
-#  canalServerHost: 127.0.0.1:11111
-  zookeeperHosts: 10.255.242.18:2181
-  mqServers: 10.255.242.76:9876;10.255.242.77:9876;10.255.242.78:9876 #or rocketmq
-  flatMessage: true
+  mode: tcp # kafka rocketMQ
+  canalServerHost: 127.0.0.1:11111
+#  zookeeperHosts: slave1:2181
+#  mqServers: 127.0.0.1:9092 #or rocketmq
+#  flatMessage: true
   batchSize: 500
   syncBatchSize: 1000
-  retries: 2
+  retries: 0
   timeout:
   accessKey:
   secretKey:
@@ -23,16 +23,16 @@ canal.conf:
   vhost:
   srcDataSources:
     defaultDS:
-      url: jdbc:mysql://10.255.254.225:3307/orders_basic?useUnicode=true
-      username: writeuser
-      password: ddbackend
+      url: jdbc:mysql://127.0.0.1:3306/orders_basic?useUnicode=true
+      username: root
+      password: 123456
   canalAdapters:
   - instance: MERCHANTORDER_SYNC_ES # canal instance Name or mq topic name
     groups:
     - groupId: MERCHANTORDER
       outerAdapters:
       - name: es6
-        hosts: 192.168.47.199:9200
+        hosts: 10.4.19.41:9200
         key: exampleKey
         properties:
           mode: rest

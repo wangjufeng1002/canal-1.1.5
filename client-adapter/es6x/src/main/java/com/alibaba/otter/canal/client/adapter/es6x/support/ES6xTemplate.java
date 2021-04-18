@@ -319,7 +319,7 @@ public class ES6xTemplate implements ESTemplate {
                 nestedPkValue.put(fieldItem.getFieldName(),getValFromData(mapping, dmlData, fieldItem.getFieldName(), columnName));
             }
         }
-
+        //this.coverNestedData(mapping, esFieldData, nestedPkValue);
         // 添加父子文档关联信息
         putRelationData(mapping, schemaItem, dmlData, esFieldData);
         return resultIdVal;
